@@ -2,8 +2,14 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
-    <form id="search" class="form-search" @submit="submitForm">
-      <Search hideLabel="true" placeholder="Search" />
+    <form id="search" class="form-search" @submit.prevent="submitForm">
+      <Search
+        hideLabel="true"
+        placeholder="Search"
+        label="Search"
+        search="testValue"
+        v-on:inputChange="handleInputChange"
+      />
       <button class="form-search__btn" type="submit">Search!</button>
     </form>
   </div>
@@ -24,24 +30,35 @@ import Search from '@/components/Search.vue';
   }
 })
 export default class Home extends Vue {
-  getApi(): void {
+  inputValue = '';
+  searchMatches: Array<object> = [];
+
+  getApi(searchResult: string): void {
     const apiUrl = 'https://api.github.com/repositories';
 
-    Vue.axios.get(apiUrl).then(response => this.handleResponse(response.data));
+    Vue.axios
+      .get(apiUrl)
+      .then(response => this.handleResponse(response.data, searchResult));
   }
 
-  handleResponse(items: AxiosResponse): void {
-    console.log(items);
-
+  handleResponse(items: AxiosResponse, searchResult: string): void {
     if (Array.isArray(items)) {
-      items.forEach(item => console.log(item));
+      items.forEach(item => {
+        if (item.name.toLowerCase().includes(searchResult.toLowerCase())) {
+          this.searchMatches.push(item);
+        }
+      });
     }
+
+    console.log(this.searchMatches);
   }
 
-  submitForm(event: HTMLFormElement) {
-    event.preventDefault();
+  submitForm(): void {
+    this.getApi(this.inputValue);
+  }
 
-    this.getApi();
+  handleInputChange(value: string): void {
+    this.inputValue = value;
   }
 }
 </script>

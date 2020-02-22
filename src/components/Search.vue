@@ -1,12 +1,13 @@
 <template>
   <div :class="BEM">
-    <label for="search__label">{{ label }}</label>
+    <label for="search" class="search__label">{{ label }}</label>
     <input
       type="text"
       id="search"
-      v-model="label"
+      v-model="searchValue"
       name="search"
       :placeholder="placeholder"
+      v-on:input="onInputChange"
     />
   </div>
 </template>
@@ -31,6 +32,11 @@ export default class Search extends Vue {
   @Prop() private label!: string;
   @Prop() private hideLabel?: boolean;
   @Prop() private placeholder?: string;
+  private searchValue = '';
+
+  onInputChange(): void {
+    this.$emit('inputChange', this.searchValue);
+  }
 }
 </script>
 
