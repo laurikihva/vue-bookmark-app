@@ -6,7 +6,7 @@
           {{ item.name }}
         </a>
       </span>
-      <button>B</button>
+      <BookmarkButton text="Bookmark" class="search-results__btn" />
     </div>
     <div class="search-results__item-bottom">
       <span>{{ item.stars }}</span>
@@ -18,7 +18,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-@Component
+import BookmarkButton from '@/components/BookmarkButton.vue';
+
+@Component({
+  components: {
+    BookmarkButton
+  }
+})
 export default class SearchResultsItem extends Vue {
   @Prop() private item!: string[];
 }
@@ -35,16 +41,21 @@ export default class SearchResultsItem extends Vue {
 .search-results__item-top {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .search-results__item-bottom {
   margin-top: 10px;
 }
 .search-results__link {
+  font-size: 20px;
   font-weight: bold;
   color: #2c3e50;
 
   &:hover {
     text-decoration: none;
   }
+}
+.search-results__btn {
+  margin-left: 10px;
 }
 </style>

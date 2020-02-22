@@ -4,6 +4,7 @@
     <input
       type="text"
       id="search"
+      class="search__input"
       v-model="searchValue"
       name="search"
       :placeholder="placeholder"
@@ -45,5 +46,12 @@ export default class Search extends Vue {
   .search--no-label & {
     display: none;
   }
+}
+.search__input {
+  border: 1px solid #2c3e50;
+  padding: 10px;
+  height: 20px;
+  font-size: 18px;
+  border-radius: 3px;
 }
 </style>
