@@ -12,7 +12,7 @@
       />
       <button class="form-search__btn" type="submit">Search!</button>
     </form>
-    <SearchResults>
+    <SearchResults isVisible="hasSearchOptions">
       <SearchResultsItem
         v-for="item in searchMatches"
         v-bind:item="item"
@@ -43,6 +43,8 @@ import SearchResultsItem from '@/components/SearchResultsItem.vue';
 export default class Home extends Vue {
   inputValue = '';
   searchMatches: Array<object> = [];
+  bookmarkedItems: Array<object> = [];
+  hasSearchOptions = false;
 
   async getApi(searchResult: string) {
     const apiUrl = 'https://api.github.com/repositories';
@@ -63,13 +65,18 @@ export default class Home extends Vue {
             name: item.name,
             url: item.html_url,
             stars: this.getStarsAmount(item.stargazers_url),
-            forks: this.getStarsAmount(item.forks_url)
+            forks: this.getStarsAmount(item.forks_url),
+            isBookmarked: false
           });
         }
       });
     }
 
-    console.log(this.searchMatches);
+    this.hasSearchOptions = this.shouldShowResults();
+  }
+
+  shouldShowResults(): boolean {
+    return this.searchMatches.length !== 0 || false;
   }
 
   async getStarsAmount(url: string) {
@@ -80,8 +87,6 @@ export default class Home extends Vue {
       .then(response =>
         response.data.forEach((item: AxiosResponse) => result.push(item))
       );
-
-    console.log(result.length);
 
     return result.length;
   }
