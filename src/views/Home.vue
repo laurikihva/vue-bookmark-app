@@ -7,7 +7,6 @@
         hideLabel="true"
         placeholder="Search"
         label="Search"
-        search="testValue"
         v-on:inputChange="handleInputChange"
       />
       <button class="form-search__btn" type="submit">Search!</button>
@@ -26,11 +25,16 @@
 // @ is an alias to /src
 import { Component, Vue } from 'vue-property-decorator';
 import { AxiosResponse } from 'axios';
+import { namespace } from 'vuex-class';
 
 import HelloWorld from '@/components/HelloWorld.vue';
 import Search from '@/components/Search.vue';
 import SearchResults from '@/components/SearchResults.vue';
-import SearchResultsItem from '@/components/SearchResultsItem.vue';
+import SearchResultsItem, {
+  SearchResultItemInterface
+} from '@/components/SearchResultsItem.vue';
+
+const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
@@ -42,8 +46,8 @@ import SearchResultsItem from '@/components/SearchResultsItem.vue';
 })
 export default class Home extends Vue {
   inputValue = '';
-  searchMatches: Array<object> = [];
-  bookmarkedItems: Array<object> = [];
+  searchMatches: SearchResultItemInterface[] = [];
+  bookmarkedItemsIds: number[] = [];
   hasSearchOptions = false;
   mockedData = [
     {
@@ -54,6 +58,14 @@ export default class Home extends Vue {
       forks: 57
     }
   ];
+  @bookmarks.State
+  public bookmarks!: SearchResultItemInterface[];
+
+  mounted(): void {
+    if (this.bookmarks.length !== 0) {
+      this.prepareBookmarkedIds();
+    }
+  }
 
   getApi(searchResult: string) {
     const apiUrl = 'https://api.github.com/repositories';
@@ -79,13 +91,15 @@ export default class Home extends Vue {
             url: item.html_url,
             stars: item.stargazers_url,
             forks: item.forks_url,
-            isBookmarked: false
+            isBookmarked:
+              !!this.bookmarkedItemsIds.find(id => id === item.id) || false
           });
         }
       });
     }
 
     this.hasSearchOptions = this.shouldShowResults();
+    console.log(this.searchMatches);
   }
 
   shouldShowResults(): boolean {
@@ -98,6 +112,10 @@ export default class Home extends Vue {
 
   handleInputChange(value: string): void {
     this.inputValue = value;
+  }
+
+  prepareBookmarkedIds(): void {
+    this.bookmarks.forEach(item => this.bookmarkedItemsIds.push(item.id));
   }
 }
 </script>

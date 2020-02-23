@@ -10,6 +10,7 @@
         text="Bookmark"
         class="search-results__btn"
         v-on:click="bookmarkClick"
+        :isActive="item.isBookmarked"
       />
     </div>
     <div class="search-results__item-bottom">
@@ -83,6 +84,8 @@ export default class SearchResultsItem extends Vue {
     Vue.axios
       .get(this.item.forks)
       .then(response => (this.forks = response.data.length));
+
+    console.log(this.item.isBookmarked);
   }
 
   @bookmarks.State
@@ -92,7 +95,13 @@ export default class SearchResultsItem extends Vue {
   public updateBookmarks!: (newBookmark: SearchResultItemInterface) => void;
 
   bookmarkClick(): void {
-    this.updateBookmarks(this.item);
+    const item = this.item;
+
+    if (!item.isBookmarked) {
+      item.isBookmarked = true;
+    }
+
+    this.updateBookmarks(item);
   }
 }
 </script>
