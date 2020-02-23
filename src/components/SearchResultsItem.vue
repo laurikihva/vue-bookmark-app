@@ -2,9 +2,12 @@
   <li :class="BEM">
     <div class="search-results__item-top">
       <span>
-        <a :href="item.url" target="_blank" class="search-results__link">
+        <router-link
+          :to="{ name: 'Repo', params: { name: item.name, item } }"
+          class="search-results__link"
+        >
           {{ item.name }}
-        </a>
+        </router-link>
       </span>
       <BookmarkButton
         text="Bookmark"
@@ -58,9 +61,14 @@ import BookmarkButton from '@/components/BookmarkButton.vue';
 
 export interface SearchResultItemInterface {
   id: number;
+  branches: string;
+  description: string;
+  commits: string;
+  contributors: string;
   name: string;
   url: string;
   stars: string;
+  releases: string;
   forks: string;
   isBookmarked: boolean;
 }
@@ -96,8 +104,6 @@ export default class SearchResultsItem extends Vue {
     Vue.axios
       .get(this.item.forks)
       .then(response => (this.forks = response.data.length));
-
-    console.log(this.item.isBookmarked);
   }
 
   @bookmarks.State

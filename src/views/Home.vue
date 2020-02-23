@@ -56,7 +56,12 @@ export default class Home extends Vue {
       name: 'repo_name',
       url: '#',
       stars: 1500,
-      forks: 57
+      forks: 57,
+      branches: 16,
+      description:
+        '**Grit is no longer maintained. Check out libgit2/rugged.** Grit gives you object oriented read/write access to Git repositories via Ruby.',
+      contributors: 28,
+      releases: 11
     }
   ];
   @bookmarks.State
@@ -88,9 +93,14 @@ export default class Home extends Vue {
         if (item.name.toLowerCase().includes(searchResult.toLowerCase())) {
           this.searchMatches.push({
             id: item.id,
+            branches: item.branches_url,
+            description: item.description,
+            commits: item.commits_url,
+            contributors: item.contributors_url,
             name: item.name,
             url: item.html_url,
             stars: item.stargazers_url,
+            releases: item.releases_url,
             forks: item.forks_url,
             isBookmarked:
               !!this.bookmarkedItemsIds.find(id => id === item.id) || false
@@ -100,7 +110,6 @@ export default class Home extends Vue {
     }
 
     this.hasSearchOptions = this.shouldShowResults();
-    console.log(this.searchMatches);
   }
 
   shouldShowResults(): boolean {

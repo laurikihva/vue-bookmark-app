@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <div class="nav" id="nav">
-      <router-link to="/">Home</router-link> |
+      <router-link to="/">
+        <span class="nav__label">Home</span>
+      </router-link>
+      |
       <router-link to="/bookmarks" class="nav__link">
         <span class="nav__label">Bookmarks</span>
         <span class="nav__counter">
@@ -51,6 +54,10 @@ export default class App extends Vue {
 }
 .nav__label {
   text-decoration: underline;
+
+  .router-link-exact-active & {
+    text-decoration: none;
+  }
 }
 .nav__counter {
   font-size: 13px;
