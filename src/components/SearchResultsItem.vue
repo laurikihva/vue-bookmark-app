@@ -92,7 +92,6 @@ const bookmarks = namespace('bookmarks');
 })
 export default class SearchResultsItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
-  @Prop() private bookmarked?: boolean = this.item.isBookmarked;
   stars = 0;
   forks = 0;
 
@@ -107,6 +106,7 @@ export default class SearchResultsItem extends Vue {
   }
 
   @bookmarks.State
+  public removedBookmark!: SearchResultItemInterface[];
   public bookmarks!: SearchResultItemInterface[];
 
   @bookmarks.Action
@@ -117,8 +117,19 @@ export default class SearchResultsItem extends Vue {
 
     if (!item.isBookmarked) {
       item.isBookmarked = true;
+      this.$toasted.show('New bookmark added!');
     } else {
       item.isBookmarked = false;
+      this.$toasted.show('Bookmark removed!', {
+        action: {
+          text: 'Undo',
+          onClick: () => {
+            this.removedBookmark[0].isBookmarked = true;
+            this.updateBookmarks(this.removedBookmark[0]);
+            this.$toasted.clear();
+          }
+        }
+      });
     }
 
     this.updateBookmarks(item);

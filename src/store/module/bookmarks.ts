@@ -4,6 +4,7 @@ import SearchResultItemInterface from '@/components/SearchResultsItem.vue';
 @Module({ namespaced: true })
 class Bookmarks extends VuexModule {
   public bookmarks: SearchResultItemInterface[] = [];
+  public removedBookmark: SearchResultItemInterface[] = [];
   @Mutation
   public setBookmark(newBookmark: SearchResultItemInterface): void {
     const matchingItem = this.bookmarks.find(
@@ -12,6 +13,8 @@ class Bookmarks extends VuexModule {
 
     if (matchingItem) {
       this.bookmarks.splice(this.bookmarks.indexOf(matchingItem), 1);
+      this.removedBookmark = [];
+      this.removedBookmark.push(matchingItem);
     } else {
       this.bookmarks.push(newBookmark);
     }

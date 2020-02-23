@@ -1,6 +1,6 @@
 <template>
   <div class="repo">
-    <SingleItem v-bind:item="this.mockedData" />
+    <SingleItem v-if="hasItem" v-bind:item="this.item" />
   </div>
 </template>
 
@@ -15,20 +15,17 @@ import SingleItem from '@/components/SingleItem.vue';
   }
 })
 export default class Repo extends Vue {
-  mockedData = [
-    {
-      id: 1,
-      name: 'repo_name',
-      url: '#',
-      stars: 1500,
-      forks: 57,
-      branches: 16,
-      description:
-        '**Grit is no longer maintained. Check out libgit2/rugged.** Grit gives you object oriented read/write access to Git repositories via Ruby.',
-      contributors: 28,
-      releases: 11
+  item = {};
+  hasItem = false;
+
+  mounted(): void {
+    if (!this.$route.params.item) {
+      return;
     }
-  ];
+
+    this.hasItem = !!this.$route.params.item;
+    this.item = this.$route.params.item;
+  }
 }
 </script>
 

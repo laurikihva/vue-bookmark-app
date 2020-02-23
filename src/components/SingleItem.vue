@@ -112,8 +112,8 @@ export default class SingleItem extends Vue {
   stars = 0;
   releases = 0;
 
-  mounted() {
-    console.log(this.$route);
+  mounted(): void {
+    console.log(this.item);
   }
 }
 </script>
