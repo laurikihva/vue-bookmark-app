@@ -1,5 +1,5 @@
 <template>
-  <li class="search-results__item">
+  <li :class="BEM">
     <div class="search-results__item-top">
       <span>
         <a :href="item.url" target="_blank" class="search-results__link">
@@ -69,10 +69,22 @@ const bookmarks = namespace('bookmarks');
 @Component({
   components: {
     BookmarkButton
+  },
+  computed: {
+    BEM(): string {
+      const classArray = ['search-results__item'];
+
+      if (this.$props.bookmarked) {
+        classArray.push('is-bookmarked');
+      }
+
+      return classArray.join(' ');
+    }
   }
 })
 export default class SearchResultsItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
+  @Prop() private bookmarked?: boolean = this.item.isBookmarked;
   stars = 0;
   forks = 0;
 
@@ -89,7 +101,7 @@ export default class SearchResultsItem extends Vue {
   }
 
   @bookmarks.State
-  public bookmarks!: SearchResultItemInterface;
+  public bookmarks!: SearchResultItemInterface[];
 
   @bookmarks.Action
   public updateBookmarks!: (newBookmark: SearchResultItemInterface) => void;
@@ -99,6 +111,8 @@ export default class SearchResultsItem extends Vue {
 
     if (!item.isBookmarked) {
       item.isBookmarked = true;
+    } else {
+      item.isBookmarked = false;
     }
 
     this.updateBookmarks(item);
@@ -113,6 +127,10 @@ export default class SearchResultsItem extends Vue {
   padding: 10px;
   min-width: 230px;
   border-radius: 10px;
+
+  &.is-bookmarked {
+    background-color: #42b983;
+  }
 }
 .search-results__item-top {
   display: flex;
@@ -141,7 +159,7 @@ export default class SearchResultsItem extends Vue {
   display: flex;
   align-items: center;
   padding: 5px;
-  border: 1px solid #9f9f9f;
+  border: 1px solid #2c3e50;
   border-radius: 3px;
 }
 .search-results__svg {

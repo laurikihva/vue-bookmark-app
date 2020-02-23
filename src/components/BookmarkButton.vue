@@ -1,5 +1,5 @@
 <template>
-  <button class="bookmark-btn" v-on:click="onBtnClick">
+  <button :class="BEM" v-on:click="onBtnClick">
     <span class="bookmark-btn__text">{{ text }}</span>
     <span class="bookmark-btn__icon">
       <svg

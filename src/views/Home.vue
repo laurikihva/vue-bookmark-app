@@ -15,6 +15,7 @@
       <SearchResultsItem
         v-for="item in searchMatches"
         v-bind:item="item"
+        :bookmarked="item.isBookmarked"
         :key="item.id"
       />
     </SearchResults>

@@ -6,7 +6,15 @@ class Bookmarks extends VuexModule {
   public bookmarks: SearchResultItemInterface[] = [];
   @Mutation
   public setBookmark(newBookmark: SearchResultItemInterface): void {
-    this.bookmarks.push(newBookmark);
+    const matchingItem = this.bookmarks.find(
+      (item: SearchResultItemInterface) => item === newBookmark
+    );
+
+    if (matchingItem) {
+      this.bookmarks.splice(this.bookmarks.indexOf(matchingItem), 1);
+    } else {
+      this.bookmarks.push(newBookmark);
+    }
   }
   @Action
   public updateBookmarks(newBookmark: SearchResultItemInterface): void {

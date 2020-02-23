@@ -1,6 +1,13 @@
 <template>
   <div class="bookmarks">
     <h1>Your bookmarked Github repositories:</h1>
+    <h3>
+      {{
+        this.bookmarks.length === 0
+          ? 'You dont have any bookmarked repository..'
+          : undefined
+      }}
+    </h3>
     <SearchResults isVisible="true">
       <SearchResultsItem
         v-for="item in bookmarks"
