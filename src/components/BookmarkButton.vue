@@ -1,5 +1,5 @@
 <template>
-  <button class="bookmark-btn">
+  <button class="bookmark-btn" v-on:click="onBtnClick">
     <span class="bookmark-btn__text">{{ text }}</span>
     <span class="bookmark-btn__icon">
       <svg
@@ -34,6 +34,10 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class BookmarkButton extends Vue {
   @Prop() private text!: string;
   @Prop() private isActive?: boolean;
+
+  onBtnClick(event: HTMLButtonElement) {
+    this.$emit('click', event);
+  }
 }
 </script>
 

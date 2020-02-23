@@ -45,17 +45,30 @@ export default class Home extends Vue {
   searchMatches: Array<object> = [];
   bookmarkedItems: Array<object> = [];
   hasSearchOptions = false;
+  mockedData = [
+    {
+      id: 1,
+      name: 'repo_name',
+      url: '#',
+      stars: 1500,
+      forks: 57
+    }
+  ];
 
-  async getApi(searchResult: string) {
+  getApi(searchResult: string) {
     const apiUrl = 'https://api.github.com/repositories';
 
-    await Vue.axios
+    Vue.axios
       .get(apiUrl)
       .then(response => this.handleResponse(response.data, searchResult));
   }
 
   handleResponse(items: AxiosResponse, searchResult: string): void {
     this.searchMatches = [];
+
+    if (this.inputValue === '') {
+      return;
+    }
 
     if (Array.isArray(items)) {
       items.forEach(item => {
@@ -64,8 +77,8 @@ export default class Home extends Vue {
             id: item.id,
             name: item.name,
             url: item.html_url,
-            stars: this.getStarsAmount(item.stargazers_url),
-            forks: this.getStarsAmount(item.forks_url),
+            stars: item.stargazers_url,
+            forks: item.forks_url,
             isBookmarked: false
           });
         }
@@ -77,18 +90,6 @@ export default class Home extends Vue {
 
   shouldShowResults(): boolean {
     return this.searchMatches.length !== 0 || false;
-  }
-
-  async getStarsAmount(url: string) {
-    const result: Array<object> = [];
-
-    await Vue.axios
-      .get(url)
-      .then(response =>
-        response.data.forEach((item: AxiosResponse) => result.push(item))
-      );
-
-    return result.length;
   }
 
   submitForm(): void {

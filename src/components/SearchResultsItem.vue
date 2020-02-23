@@ -6,11 +6,45 @@
           {{ item.name }}
         </a>
       </span>
-      <BookmarkButton text="Bookmark" class="search-results__btn" />
+      <BookmarkButton
+        text="Bookmark"
+        class="search-results__btn"
+        v-on:click="bookmarkClick"
+      />
     </div>
     <div class="search-results__item-bottom">
-      <span>{{ item.stars }}</span>
-      <span>{{ item.forks }}</span>
+      <div class="search-results__stars" title="Stars">
+        <div class="search-results__icon">
+          <svg
+            viewBox="0 -10 511.99 511"
+            xmlns="http://www.w3.org/2000/svg"
+            class="search-results__svg"
+          >
+            <path
+              d="M510.65 185.88a27.18 27.18 0 00-23.4-18.68l-147.8-13.42-58.4-136.75a27.22 27.22 0 00-50.08 0l-58.4 136.75L24.73 167.2a27.26 27.26 0 00-15.46 47.6L121 312.78 88.06 457.86a27.2 27.2 0 0040.5 29.42L256 411.08l127.42 76.2a27.2 27.2 0 0029.93-1.32 27.2 27.2 0 0010.58-28.1L391 312.77l111.72-97.96a27.25 27.25 0 007.94-28.93zm-252.2 223.73"
+            />
+          </svg>
+        </div>
+        <div class="search-results__counter">
+          {{ this.stars }}
+        </div>
+      </div>
+      <div class="search-results__forks" title="Forks">
+        <div class="search-results__icon">
+          <svg
+            class="search-results__svg"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 10 16"
+          >
+            <path
+              d="M8 1a1.993 1.993 0 00-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 002 1a1.993 1.993 0 00-1 3.72V6.5l3 3v1.78A1.993 1.993 0 005 15a1.993 1.993 0 001-3.72V9.5l3-3V4.72A1.993 1.993 0 008 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"
+            ></path>
+          </svg>
+        </div>
+        <div class="search-results__counter">
+          {{ this.forks }}
+        </div>
+      </div>
     </div>
   </li>
 </template>
@@ -20,13 +54,38 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import BookmarkButton from '@/components/BookmarkButton.vue';
 
+export interface SearchResultItemInterface {
+  id: number;
+  name: string;
+  url: string;
+  stars: string;
+  forks: string;
+  isBookmarked: boolean;
+}
+
 @Component({
   components: {
     BookmarkButton
   }
 })
 export default class SearchResultsItem extends Vue {
-  @Prop() private item!: string[];
+  @Prop() private item!: SearchResultItemInterface;
+  stars = 0;
+  forks = 0;
+
+  mounted(): void {
+    Vue.axios
+      .get(this.item.stars)
+      .then(response => (this.stars = response.data.length));
+
+    Vue.axios
+      .get(this.item.forks)
+      .then(response => (this.forks = response.data.length));
+  }
+
+  bookmarkClick() {
+    console.log(this.item);
+  }
 }
 </script>
 
@@ -45,6 +104,8 @@ export default class SearchResultsItem extends Vue {
 }
 .search-results__item-bottom {
   margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
 }
 .search-results__link {
   font-size: 20px;
@@ -57,5 +118,21 @@ export default class SearchResultsItem extends Vue {
 }
 .search-results__btn {
   margin-left: 10px;
+}
+.search-results__stars,
+.search-results__forks {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #9f9f9f;
+  border-radius: 3px;
+}
+.search-results__svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+.search-results__icon {
+  margin-right: 5px;
 }
 </style>
