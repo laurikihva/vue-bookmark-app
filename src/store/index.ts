@@ -4,12 +4,15 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
+import Bookmarks from '@/store/module/bookmarks';
+
 Vue.use(Vuex);
 Vue.use(VueAxios, axios);
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
+const store = new Vuex.Store({
+  modules: {
+    Bookmarks
+  }
 });
+
+export default store;

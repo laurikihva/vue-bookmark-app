@@ -51,6 +51,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
 import BookmarkButton from '@/components/BookmarkButton.vue';
 
@@ -62,6 +63,7 @@ export interface SearchResultItemInterface {
   forks: string;
   isBookmarked: boolean;
 }
+const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
@@ -83,8 +85,14 @@ export default class SearchResultsItem extends Vue {
       .then(response => (this.forks = response.data.length));
   }
 
-  bookmarkClick() {
-    console.log(this.item);
+  @bookmarks.State
+  public bookmarks!: SearchResultItemInterface;
+
+  @bookmarks.Action
+  public updateBookmarks!: (newBookmark: SearchResultItemInterface) => void;
+
+  bookmarkClick(): void {
+    this.updateBookmarks(this.item);
   }
 }
 </script>
