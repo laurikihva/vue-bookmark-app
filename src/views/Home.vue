@@ -1,8 +1,9 @@
 <template>
   <div class="home" id="home">
     <Overlay v-if="this.isSearching" />
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <img alt="Search logo" src="../assets/logo.png" class="home__logo" />
+    <h1>Welcome to bookmarking app!</h1>
+    <h3>Search below for any GitHub repository..</h3>
     <form id="home-search" class="home-search" @submit.prevent="submitForm">
       <Search
         hideLabel="true"
@@ -38,7 +39,6 @@ import { AxiosResponse } from 'axios';
 import { namespace } from 'vuex-class';
 import Paginate from 'vuejs-paginate';
 
-import HelloWorld from '@/components/HelloWorld.vue';
 import Overlay from '@/components/Overlay.vue';
 import Search from '@/components/Search.vue';
 import SearchResults from '@/components/SearchResults.vue';
@@ -50,7 +50,6 @@ const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
-    HelloWorld,
     Overlay,
     Paginate,
     Search,
@@ -171,6 +170,14 @@ export default class Home extends Vue {
 
   &:hover {
     background-color: #2c3e50;
+  }
+}
+.home__logo {
+  width: 270px;
+}
+h3 {
+  .home & {
+    margin-top: 0;
   }
 }
 ul.home__pagination {
