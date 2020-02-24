@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 
 import Toasted from 'vue-toasted';
+import VueScrollTo from 'vue-scrollto';
 
 Vue.config.productionTip = false;
 
@@ -21,3 +22,4 @@ const toastOptions = {
 };
 
 Vue.use(Toasted, toastOptions);
+Vue.use(VueScrollTo);

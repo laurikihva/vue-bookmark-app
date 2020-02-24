@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" id="home">
     <Overlay v-if="this.isSearching" />
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
@@ -85,19 +85,11 @@ export default class Home extends Vue {
     Vue.axios
       .get(generateUrl)
       .then(response =>
-        this.handleResponse(
-          response.data.items,
-          response.data.total_count,
-          response.data
-        )
+        this.handleResponse(response.data.items, response.data.total_count)
       );
   }
 
-  handleResponse(
-    items: AxiosResponse,
-    totalCount: number,
-    resp: AxiosResponse
-  ) {
+  handleResponse(items: AxiosResponse, totalCount: number) {
     if (this.inputValue === '') {
       return;
     }
@@ -106,7 +98,6 @@ export default class Home extends Vue {
     this.searchMatches = [];
 
     if (Array.isArray(items)) {
-      console.log(resp);
       items.forEach(item => {
         this.searchMatches.push({
           id: item.id,
@@ -126,6 +117,7 @@ export default class Home extends Vue {
 
     this.isSearching = false;
     this.hasSearchOptions = this.shouldShowResults();
+    this.$scrollTo('#nav');
   }
 
   setPaginationPages(total: number): void {
