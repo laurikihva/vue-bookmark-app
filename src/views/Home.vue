@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Overlay v-if="this.isSearching" />
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
     <form id="form-search" class="form-search" @submit.prevent="submitForm">
@@ -38,6 +39,7 @@ import { namespace } from 'vuex-class';
 import Paginate from 'vuejs-paginate';
 
 import HelloWorld from '@/components/HelloWorld.vue';
+import Overlay from '@/components/Overlay.vue';
 import Search from '@/components/Search.vue';
 import SearchResults from '@/components/SearchResults.vue';
 import SearchResultsItem, {
@@ -49,6 +51,7 @@ const bookmarks = namespace('bookmarks');
 @Component({
   components: {
     HelloWorld,
+    Overlay,
     Paginate,
     Search,
     SearchResults,
@@ -61,6 +64,7 @@ export default class Home extends Vue {
   bookmarkedItemsIds: number[] = [];
   paginationPages = 0;
   hasSearchOptions = false;
+  isSearching = false;
 
   @bookmarks.State
   public bookmarks!: SearchResultItemInterface[];
@@ -120,6 +124,7 @@ export default class Home extends Vue {
       });
     }
 
+    this.isSearching = false;
     this.hasSearchOptions = this.shouldShowResults();
   }
 
@@ -137,6 +142,7 @@ export default class Home extends Vue {
   }
 
   submitForm(): void {
+    this.isSearching = true;
     this.getApi(this.inputValue);
   }
 
@@ -145,6 +151,7 @@ export default class Home extends Vue {
   }
 
   handlePaginationClick(pagNum: number) {
+    this.isSearching = true;
     this.getApi(this.inputValue, pagNum);
   }
 }

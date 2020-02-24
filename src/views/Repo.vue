@@ -1,5 +1,6 @@
 <template>
   <div class="repo">
+    <Overlay v-if="!this.hasLoaded" />
     <SingleItem v-if="hasLoaded" v-bind:item="this.item" />
   </div>
 </template>
@@ -9,13 +10,15 @@ import { Component, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 
 import SingleItem from '@/components/SingleItem.vue';
+import Overlay from '@/components/Overlay.vue';
 import { SearchResultItemInterface } from '@/components/SearchResultsItem.vue';
 
 const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
-    SingleItem
+    SingleItem,
+    Overlay
   }
 })
 export default class Repo extends Vue {
