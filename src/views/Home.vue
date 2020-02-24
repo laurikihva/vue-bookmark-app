@@ -6,8 +6,8 @@
       <Search
         hideLabel="true"
         placeholder="Search"
+        v-model="inputValue"
         label="Search"
-        v-on:inputChange="handleInputChange"
       />
       <button class="form-search__btn" type="submit">Search!</button>
     </form>
@@ -25,6 +25,7 @@
       :prevText="'Prev'"
       :nextText="'Next'"
       :clickHandler="handlePaginationClick"
+      :containerClass="'home__pagination'"
     />
   </div>
 </template>
@@ -93,18 +94,28 @@ export default class Home extends Vue {
     Vue.axios
       .get(generateUrl)
       .then(response =>
-        this.handleResponse(response.data.items, response.data.total_count)
+        this.handleResponse(
+          response.data.items,
+          response.data.total_count,
+          response.data
+        )
       );
   }
 
-  handleResponse(items: AxiosResponse, totalCount: number) {
+  handleResponse(
+    items: AxiosResponse,
+    totalCount: number,
+    resp: AxiosResponse
+  ) {
     if (this.inputValue === '') {
       return;
     }
 
     this.setPaginationPages(totalCount);
+    this.searchMatches = [];
 
     if (Array.isArray(items)) {
+      console.log(resp);
       items.forEach(item => {
         this.searchMatches.push({
           id: item.id,
@@ -142,19 +153,13 @@ export default class Home extends Vue {
     this.getApi(this.inputValue);
   }
 
-  handleInputChange(value: string): void {
-    this.inputValue = value;
-  }
-
   prepareBookmarkedIds(): void {
     this.bookmarks.forEach(item => this.bookmarkedItemsIds.push(item.id));
   }
 
-  handlePaginationClick = (pagNum: number) => {
-    console.log(pagNum);
-    console.log(this.inputValue);
-    // this.getApi(this.inputValue, pagNum);
-  };
+  handlePaginationClick(pagNum: number) {
+    this.getApi(this.inputValue, pagNum);
+  }
 }
 </script>
 
@@ -163,6 +168,7 @@ export default class Home extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px;
 }
 .form-search {
   display: flex;
@@ -170,5 +176,30 @@ export default class Home extends Vue {
 }
 .form-search__btn {
   margin-left: 15px;
+}
+ul.home__pagination {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  font-weight: 800;
+}
+li {
+  .home__pagination & {
+    margin: 0 5px;
+
+    &.active {
+      color: #42b983;
+    }
+
+    &.disabled {
+      color: #9f9f9f;
+    }
+  }
+}
+a {
+  .home__pagination > li.disabled & {
+    pointer-events: none;
+  }
 }
 </style>

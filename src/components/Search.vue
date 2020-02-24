@@ -5,10 +5,11 @@
       type="text"
       id="search"
       class="search__input"
-      v-model="searchValue"
       name="search"
+      ref="searchInput"
+      :value="value"
       :placeholder="placeholder"
-      v-on:input="onInputChange"
+      @input="updateValue"
     />
   </div>
 </template>
@@ -33,10 +34,13 @@ export default class Search extends Vue {
   @Prop() private label!: string;
   @Prop() private hideLabel?: boolean;
   @Prop() private placeholder?: string;
-  private searchValue = '';
+  @Prop() private value!: string;
+  $refs!: {
+    searchInput: HTMLInputElement;
+  };
 
-  onInputChange(): void {
-    this.$emit('inputChange', this.searchValue);
+  updateValue(): void {
+    this.$emit('input', this.$refs.searchInput.value);
   }
 }
 </script>

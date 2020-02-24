@@ -3,7 +3,7 @@
     <div class="search-results__item-top">
       <span>
         <router-link
-          :to="{ name: 'Repo', params: { name: item.name, item } }"
+          :to="{ name: 'Repo', params: { name: item.fullName, item } }"
           class="search-results__link"
         >
           {{ item.name }}

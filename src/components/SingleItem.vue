@@ -104,13 +104,6 @@ import SearchResultItemInterface from '@/components/SearchResultsItem.vue';
 })
 export default class SingleItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
-  branches = 0;
-  commits = 0;
-  contributors = 0;
-  forks = 0;
-  url = '';
-  stars = 0;
-  releases = 0;
 
   mounted(): void {
     console.log(this.item);
