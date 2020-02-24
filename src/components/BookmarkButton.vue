@@ -1,5 +1,5 @@
 <template>
-  <button :class="BEM" v-on:click="onBtnClick">
+  <button :class="BEM" @click="bookmarkClick">
     <span class="bookmark-btn__text">{{ text }}</span>
     <span class="bookmark-btn__icon">
       <svg
@@ -17,6 +17,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+
+import { SearchResultItemInterface } from '@/components/SearchResultsItem.vue';
+
+const bookmarks = namespace('bookmarks');
 
 @Component({
   computed: {
@@ -34,9 +39,36 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class BookmarkButton extends Vue {
   @Prop() private text!: string;
   @Prop() private isActive?: boolean;
+  @Prop() private item!: SearchResultItemInterface;
 
-  onBtnClick(event: HTMLButtonElement) {
-    this.$emit('click', event);
+  @bookmarks.State
+  public removedBookmark!: SearchResultItemInterface[];
+  public bookmarks!: SearchResultItemInterface[];
+
+  @bookmarks.Action
+  public updateBookmarks!: (newBookmark: SearchResultItemInterface) => void;
+
+  bookmarkClick(): void {
+    const item = this.item;
+
+    if (!item.isBookmarked) {
+      item.isBookmarked = true;
+      this.$toasted.show('New bookmark added!');
+    } else {
+      item.isBookmarked = false;
+      this.$toasted.show('Bookmark removed!', {
+        action: {
+          text: 'Undo',
+          onClick: () => {
+            this.removedBookmark[0].isBookmarked = true;
+            this.updateBookmarks(this.removedBookmark[0]);
+            this.$toasted.clear();
+          }
+        }
+      });
+    }
+
+    this.updateBookmarks(item);
   }
 }
 </script>

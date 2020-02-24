@@ -1,13 +1,17 @@
 <template>
   <div class="repo">
-    <SingleItem v-if="hasItem" v-bind:item="this.item" />
+    <SingleItem v-if="hasLoaded" v-bind:item="this.item" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
 import SingleItem from '@/components/SingleItem.vue';
+import { SearchResultItemInterface } from '@/components/SearchResultsItem.vue';
+
+const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
@@ -16,15 +20,47 @@ import SingleItem from '@/components/SingleItem.vue';
 })
 export default class Repo extends Vue {
   item = {};
-  hasItem = false;
+  bookmarkedItemsIds: number[] = [];
+  hasLoaded = false;
+
+  @bookmarks.State
+  public bookmarks!: SearchResultItemInterface[];
 
   mounted(): void {
     if (!this.$route.params.item) {
-      return;
-    }
+      this.prepareBookmarkedIds();
+      const apiUrl = 'https://api.github.com/repos/' + this.$route.params.name;
 
-    this.hasItem = !!this.$route.params.item;
-    this.item = this.$route.params.item;
+      Vue.axios
+        .get(apiUrl)
+        .then(response => this.handleResponse(response.data));
+    } else {
+      this.item = this.$route.params.item;
+      this.hasLoaded = true;
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  handleResponse(item: any) {
+    this.item = {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      fullName: item.full_name,
+      url: item.html_url,
+      homepage: item.homepage,
+      stars: item.stargazers_count,
+      forks: item.forks_count,
+      license: item.license && item.license.name,
+      isBookmarked:
+        !!this.bookmarkedItemsIds.find(id => id === item.id) || false
+    };
+
+    this.hasLoaded = true;
+  }
+
+  prepareBookmarkedIds(): void {
+    this.bookmarks.forEach(item => this.bookmarkedItemsIds.push(item.id));
   }
 }
 </script>

@@ -16,7 +16,11 @@
         </span>
         <span class="single-item__link-label">{{ item.fullName }}</span>
       </a>
-      <BookmarkButton text="Bookmark" :isActive="item.isBookmarked" />
+      <BookmarkButton
+        text="Bookmark"
+        :isActive="item.isBookmarked"
+        v-bind:item="item"
+      />
     </div>
     <div class="single-item__description">
       <p>{{ item.description }}</p>
@@ -59,10 +63,6 @@ import SearchResultItemInterface from '@/components/SearchResultsItem.vue';
 })
 export default class SingleItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
-
-  mounted(): void {
-    console.log(this.item);
-  }
 }
 </script>
 

@@ -12,7 +12,7 @@
       <BookmarkButton
         text="Bookmark"
         class="search-results__btn"
-        v-on:click="bookmarkClick"
+        v-bind:item="item"
         :isActive="item.isBookmarked"
       />
     </div>
@@ -55,7 +55,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
 import BookmarkButton from '@/components/BookmarkButton.vue';
 
@@ -71,7 +70,6 @@ export interface SearchResultItemInterface {
   license: string;
   isBookmarked: boolean;
 }
-const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
@@ -91,36 +89,6 @@ const bookmarks = namespace('bookmarks');
 })
 export default class SearchResultsItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
-
-  @bookmarks.State
-  public removedBookmark!: SearchResultItemInterface[];
-  public bookmarks!: SearchResultItemInterface[];
-
-  @bookmarks.Action
-  public updateBookmarks!: (newBookmark: SearchResultItemInterface) => void;
-
-  bookmarkClick(): void {
-    const item = this.item;
-
-    if (!item.isBookmarked) {
-      item.isBookmarked = true;
-      this.$toasted.show('New bookmark added!');
-    } else {
-      item.isBookmarked = false;
-      this.$toasted.show('Bookmark removed!', {
-        action: {
-          text: 'Undo',
-          onClick: () => {
-            this.removedBookmark[0].isBookmarked = true;
-            this.updateBookmarks(this.removedBookmark[0]);
-            this.$toasted.clear();
-          }
-        }
-      });
-    }
-
-    this.updateBookmarks(item);
-  }
 }
 </script>
 
