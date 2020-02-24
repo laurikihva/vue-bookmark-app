@@ -61,20 +61,7 @@ export default class Home extends Vue {
   bookmarkedItemsIds: number[] = [];
   paginationPages = 0;
   hasSearchOptions = false;
-  mockedData = [
-    {
-      id: 1,
-      name: 'repo_name',
-      url: '#',
-      stars: 1500,
-      forks: 57,
-      branches: 16,
-      description:
-        '**Grit is no longer maintained. Check out libgit2/rugged.** Grit gives you object oriented read/write access to Git repositories via Ruby.',
-      contributors: 28,
-      releases: 11
-    }
-  ];
+
   @bookmarks.State
   public bookmarks!: SearchResultItemInterface[];
 
@@ -120,13 +107,13 @@ export default class Home extends Vue {
         this.searchMatches.push({
           id: item.id,
           name: item.name,
-          descritpion: item.description,
+          description: item.description,
           fullName: item.full_name,
           url: item.html_url,
           homepage: item.homepage,
           stars: item.stargazers_count,
           forks: item.forks_count,
-          watchers: item.subscribers_count,
+          license: item.license && item.license.name,
           isBookmarked:
             !!this.bookmarkedItemsIds.find(id => id === item.id) || false
         });

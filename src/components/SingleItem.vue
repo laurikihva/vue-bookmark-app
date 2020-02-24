@@ -19,71 +19,26 @@
       <BookmarkButton text="Bookmark" :isActive="item.isBookmarked" />
     </div>
     <div class="single-item__description">
-      {{ item.description }}
+      <p>{{ item.description }}</p>
+      <p v-if="item.homepage">
+        <a :href="item.homepage" target="_blank">{{ item.homepage }}</a>
+      </p>
     </div>
     <div class="single-item__details">
       <ul class="single-item__details-list">
         <li class="single-item__details-list-item">
-          <div class="single-item__details-icon">
-            <svg
-              width="14"
-              height="16"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 13H6V6h5v2H8v5zM7 1a6.97 6.97 0 00-5.41 2.59L0 2v4h4L2.5 4.5A5.71 5.71 0 117 13.7 5.71 5.71 0 011.3 8c0-.34.03-.67.09-1H.08A7 7 0 107 1z"
-              />
-            </svg>
-          </div>
           <div class="single-item__details-label">
-            <strong>{{ this.commits }}</strong> commits
+            <strong>{{ item.stars }}</strong> stars
           </div>
         </li>
         <li class="single-item__details-list-item">
-          <div class="single-item__details-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 10 16"
-              class="single-item__svg"
-            >
-              <path
-                d="M8 1a1.993 1.993 0 00-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 002 1a1.993 1.993 0 00-1 3.72V6.5l3 3v1.78A1.993 1.993 0 005 15a1.993 1.993 0 001-3.72V9.5l3-3V4.72A1.993 1.993 0 008 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"
-              ></path>
-            </svg>
-          </div>
           <div class="single-item__details-label">
-            <strong>{{ this.branches }}</strong> branches
+            <strong>{{ item.forks }}</strong> forks
           </div>
         </li>
         <li class="single-item__details-list-item">
-          <div class="single-item__details-icon">
-            <svg width="14" height="16" xmlns="http://www.w3.org/2000/svg">
-              <path
-                fill-rule="evenodd"
-                d="M7.73 1.73A2.5 2.5 0 005.96 1H3.5A2.51 2.51 0 001 3.5v2.47c0 .66.27 1.3.73 1.77l6.06 6.06a1 1 0 001.41 0l4.59-4.59a1 1 0 000-1.41L7.73 1.73zM2.38 7.09c-.31-.3-.47-.7-.47-1.13V3.5c0-.88.72-1.59 1.59-1.59h2.47c.42 0 .83.16 1.13.47l6.14 6.13-4.73 4.73-6.13-6.15zM3.01 3h2v2H3V3h.01z"
-              />
-            </svg>
-          </div>
           <div class="single-item__details-label">
-            <strong>{{ this.releases }}</strong> releases
-          </div>
-        </li>
-        <li class="single-item__details-list-item">
-          <div class="single-item__details-icon">
-            <svg
-              width="16"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-              class="single-item__svg"
-            >
-              <path
-                d="M16 13c0 .44-.45 1-1 1H8a1 1 0 01-1-1H1c-.54 0-1-.56-1-1 0-2.63 3-4 3-4s.23-.4 0-1c-.84-.62-1.06-.59-1-3 .06-2.42 1.37-3 2.5-3s2.44.58 2.5 3c.06 2.41-.16 2.38-1 3-.23.59 0 1 0 1s1.55.71 2.42 2.09C9.2 9.37 10 8.99 10 8.99s.23-.4 0-1c-.84-.61-1.06-.58-1-3 .06-2.41 1.37-3 2.5-3s2.44.59 2.5 3c.05 2.42-.16 2.39-1 3-.23.6 0 1 0 1s3 1.38 3 4z"
-              />
-            </svg>
-          </div>
-          <div class="single-item__details-label">
-            <strong>{{ this.contributors }}</strong> contributors
+            <strong>{{ item.license || 'No license' }}</strong>
           </div>
         </li>
       </ul>

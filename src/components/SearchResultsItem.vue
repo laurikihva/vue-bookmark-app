@@ -62,13 +62,13 @@ import BookmarkButton from '@/components/BookmarkButton.vue';
 export interface SearchResultItemInterface {
   id: number;
   name: string;
-  descritpion: string;
+  description: string;
   fullName: string;
   url: string;
   homepage: string;
   stars: number;
   forks: number;
-  watchers: number;
+  license: string;
   isBookmarked: boolean;
 }
 const bookmarks = namespace('bookmarks');
