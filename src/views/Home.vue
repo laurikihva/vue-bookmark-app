@@ -3,14 +3,14 @@
     <Overlay v-if="this.isSearching" />
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
-    <form id="form-search" class="form-search" @submit.prevent="submitForm">
+    <form id="home-search" class="home-search" @submit.prevent="submitForm">
       <Search
         hideLabel="true"
         placeholder="Search"
         v-model="inputValue"
         label="Search"
       />
-      <button class="form-search__btn" type="submit">Search!</button>
+      <button class="home-search__btn" type="submit">Search!</button>
     </form>
     <SearchResults isVisible="hasSearchOptions">
       <SearchResultsItem
@@ -90,10 +90,6 @@ export default class Home extends Vue {
   }
 
   handleResponse(items: AxiosResponse, totalCount: number) {
-    if (this.inputValue === '') {
-      return;
-    }
-
     this.setPaginationPages(totalCount);
     this.searchMatches = [];
 
@@ -134,6 +130,10 @@ export default class Home extends Vue {
   }
 
   submitForm(): void {
+    if (this.inputValue === '') {
+      return;
+    }
+
     this.isSearching = true;
     this.getApi(this.inputValue);
   }
@@ -156,12 +156,22 @@ export default class Home extends Vue {
   align-items: center;
   margin-bottom: 20px;
 }
-.form-search {
+.home-search {
   display: flex;
   justify-content: center;
 }
-.form-search__btn {
+.home-search__btn {
   margin-left: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: #42b983;
+  color: #ffffff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2c3e50;
+  }
 }
 ul.home__pagination {
   list-style: none;
