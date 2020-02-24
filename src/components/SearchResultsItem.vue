@@ -30,7 +30,7 @@
           </svg>
         </div>
         <div class="search-results__counter">
-          {{ this.stars }}
+          {{ item.stars }}
         </div>
       </div>
       <div class="search-results__forks" title="Forks">
@@ -46,7 +46,7 @@
           </svg>
         </div>
         <div class="search-results__counter">
-          {{ this.forks }}
+          {{ item.forks }}
         </div>
       </div>
     </div>
@@ -61,15 +61,14 @@ import BookmarkButton from '@/components/BookmarkButton.vue';
 
 export interface SearchResultItemInterface {
   id: number;
-  branches: string;
-  description: string;
-  commits: string;
-  contributors: string;
   name: string;
+  descritpion: string;
+  fullName: string;
   url: string;
-  stars: string;
-  releases: string;
-  forks: string;
+  homepage: string;
+  stars: number;
+  forks: number;
+  watchers: number;
   isBookmarked: boolean;
 }
 const bookmarks = namespace('bookmarks');
@@ -92,18 +91,6 @@ const bookmarks = namespace('bookmarks');
 })
 export default class SearchResultsItem extends Vue {
   @Prop() private item!: SearchResultItemInterface;
-  stars = 0;
-  forks = 0;
-
-  mounted(): void {
-    Vue.axios
-      .get(this.item.stars)
-      .then(response => (this.stars = response.data.length));
-
-    Vue.axios
-      .get(this.item.forks)
-      .then(response => (this.forks = response.data.length));
-  }
 
   @bookmarks.State
   public removedBookmark!: SearchResultItemInterface[];

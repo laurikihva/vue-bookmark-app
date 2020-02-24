@@ -19,6 +19,13 @@
         :key="item.id"
       />
     </SearchResults>
+    <paginate
+      v-if="hasSearchOptions && paginationPages !== 0"
+      :pageCount="paginationPages"
+      :prevText="'Prev'"
+      :nextText="'Next'"
+      :clickHandler="handlePaginationClick"
+    />
   </div>
 </template>
 
@@ -27,6 +34,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { AxiosResponse } from 'axios';
 import { namespace } from 'vuex-class';
+import Paginate from 'vuejs-paginate';
 
 import HelloWorld from '@/components/HelloWorld.vue';
 import Search from '@/components/Search.vue';
@@ -40,6 +48,7 @@ const bookmarks = namespace('bookmarks');
 @Component({
   components: {
     HelloWorld,
+    Paginate,
     Search,
     SearchResults,
     SearchResultsItem
@@ -49,6 +58,7 @@ export default class Home extends Vue {
   inputValue = '';
   searchMatches: SearchResultItemInterface[] = [];
   bookmarkedItemsIds: number[] = [];
+  paginationPages = 0;
   hasSearchOptions = false;
   mockedData = [
     {
@@ -73,43 +83,55 @@ export default class Home extends Vue {
     }
   }
 
-  getApi(searchResult: string) {
-    const apiUrl = 'https://api.github.com/repositories';
+  getApi(searchResult: string, pagination?: number) {
+    const apiUrl =
+      'https://api.github.com/search/repositories?q=' + searchResult;
+    const page = pagination;
+    const generateUrl = page ? apiUrl + '&page=' + page : apiUrl;
+    console.log(generateUrl);
 
     Vue.axios
-      .get(apiUrl)
-      .then(response => this.handleResponse(response.data, searchResult));
+      .get(generateUrl)
+      .then(response =>
+        this.handleResponse(response.data.items, response.data.total_count)
+      );
   }
 
-  handleResponse(items: AxiosResponse, searchResult: string): void {
-    this.searchMatches = [];
-
+  handleResponse(items: AxiosResponse, totalCount: number) {
     if (this.inputValue === '') {
       return;
     }
 
+    this.setPaginationPages(totalCount);
+
     if (Array.isArray(items)) {
       items.forEach(item => {
-        if (item.name.toLowerCase().includes(searchResult.toLowerCase())) {
-          this.searchMatches.push({
-            id: item.id,
-            branches: item.branches_url,
-            description: item.description,
-            commits: item.commits_url,
-            contributors: item.contributors_url,
-            name: item.name,
-            url: item.html_url,
-            stars: item.stargazers_url,
-            releases: item.releases_url,
-            forks: item.forks_url,
-            isBookmarked:
-              !!this.bookmarkedItemsIds.find(id => id === item.id) || false
-          });
-        }
+        this.searchMatches.push({
+          id: item.id,
+          name: item.name,
+          descritpion: item.description,
+          fullName: item.full_name,
+          url: item.html_url,
+          homepage: item.homepage,
+          stars: item.stargazers_count,
+          forks: item.forks_count,
+          watchers: item.subscribers_count,
+          isBookmarked:
+            !!this.bookmarkedItemsIds.find(id => id === item.id) || false
+        });
       });
     }
 
     this.hasSearchOptions = this.shouldShowResults();
+  }
+
+  setPaginationPages(total: number): void {
+    const result = total / 30;
+    if (result < 1) {
+      this.paginationPages = 0;
+    } else {
+      this.paginationPages = Math.ceil(result);
+    }
   }
 
   shouldShowResults(): boolean {
@@ -127,6 +149,12 @@ export default class Home extends Vue {
   prepareBookmarkedIds(): void {
     this.bookmarks.forEach(item => this.bookmarkedItemsIds.push(item.id));
   }
+
+  handlePaginationClick = (pagNum: number) => {
+    console.log(pagNum);
+    console.log(this.inputValue);
+    // this.getApi(this.inputValue, pagNum);
+  };
 }
 </script>
 

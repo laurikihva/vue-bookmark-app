@@ -1,7 +1,7 @@
 <template>
   <div class="single-item">
     <div class="single-item__heading">
-      <a :href="item.url" class="single-item__link">
+      <a :href="item.url" class="single-item__link" target="_blank">
         <span class="single-item__link-icon">
           <svg
             viewBox="0 0 16 16"
@@ -14,9 +14,9 @@
             />
           </svg>
         </span>
-        <span class="single-item__link-label">{{ item.name }}</span>
+        <span class="single-item__link-label">{{ item.fullName }}</span>
       </a>
-      <BookmarkButton text="Bookmark" />
+      <BookmarkButton text="Bookmark" :isActive="item.isBookmarked" />
     </div>
     <div class="single-item__description">
       {{ item.description }}
