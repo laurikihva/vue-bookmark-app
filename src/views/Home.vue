@@ -81,7 +81,6 @@ export default class Home extends Vue {
     const generateUrl = page
       ? apiUrl + '&page=' + page + '&per_page=30'
       : apiUrl;
-    console.log(generateUrl);
 
     Vue.axios
       .get(generateUrl)
