@@ -110,6 +110,7 @@ export default class Home extends Vue {
     totalCount: number
   ) {
     this.searchMatches = [];
+    this.paginationPages = 0;
 
     if (response.status !== 200) {
       this.invalidStatus = true;
