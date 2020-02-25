@@ -1,42 +1,24 @@
 <template>
-  <ul :class="BEM">
+  <ul class="search-results">
     <slot />
   </ul>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
-  computed: {
-    BEM(): string {
-      const classArray = ['search-results'];
-
-      if (this.$props.isVisible) {
-        classArray.push('is-visible');
-      }
-
-      return classArray.join(' ');
-    }
-  }
-})
-export default class SearchResults extends Vue {
-  @Prop() private isVisible?: boolean;
-}
+@Component
+export default class SearchResults extends Vue {}
 </script>
 
 <style lang="scss">
 .search-results {
-  display: none;
+  display: flex;
   list-style: none;
   padding: 0;
   max-width: 550px;
   flex-wrap: wrap;
   border-radius: 10px;
   justify-content: center;
-
-  &.is-visible {
-    display: flex;
-  }
 }
 </style>

@@ -105,7 +105,7 @@ export default class SearchResultsItem extends Vue {
 .search-results__item-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 .search-results__item-bottom {
   margin-top: 10px;

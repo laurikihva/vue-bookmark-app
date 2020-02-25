@@ -8,12 +8,18 @@
       <Search
         hideLabel="true"
         placeholder="Search"
-        v-model="inputValue"
+        v-model.trim="inputValue"
         label="Search"
       />
       <button class="home-search__btn" type="submit">Search!</button>
     </form>
-    <SearchResults isVisible="hasSearchOptions">
+    <NotificationMessage v-if="invalidStatus" type="error">
+      Oops! Something went wrong. Please try again!
+    </NotificationMessage>
+    <NotificationMessage v-if="noResults">
+      Couldn't find anything for {{ this.inputValue }}
+    </NotificationMessage>
+    <SearchResults v-if="hasSearchOptions">
       <SearchResultsItem
         v-for="item in searchMatches"
         v-bind:item="item"
@@ -22,7 +28,7 @@
       />
     </SearchResults>
     <paginate
-      v-if="hasSearchOptions && paginationPages !== 0"
+      v-if="hasSearchOptions && paginationPages !== 0 && !invalidStatus"
       :pageCount="paginationPages"
       :prevText="'Prev'"
       :nextText="'Next'"
@@ -39,6 +45,7 @@ import { AxiosResponse } from 'axios';
 import { namespace } from 'vuex-class';
 import Paginate from 'vuejs-paginate';
 
+import NotificationMessage from '@/components/NotificationMessage.vue';
 import Overlay from '@/components/Overlay.vue';
 import Search from '@/components/Search.vue';
 import SearchResults from '@/components/SearchResults.vue';
@@ -50,6 +57,7 @@ const bookmarks = namespace('bookmarks');
 
 @Component({
   components: {
+    NotificationMessage,
     Overlay,
     Paginate,
     Search,
@@ -59,11 +67,13 @@ const bookmarks = namespace('bookmarks');
 })
 export default class Home extends Vue {
   inputValue = '';
+  invalidStatus = false;
   searchMatches: SearchResultItemInterface[] = [];
   bookmarkedItemsIds: number[] = [];
   paginationPages = 0;
   hasSearchOptions = false;
   isSearching = false;
+  noResults = false;
 
   @bookmarks.State
   public bookmarks!: SearchResultItemInterface[];
@@ -76,7 +86,8 @@ export default class Home extends Vue {
 
   getApi(searchResult: string, pagination?: number) {
     const apiUrl =
-      'https://api.github.com/search/repositories?q=' + searchResult;
+      'https://api.github.com/search/repositories?q=' +
+      encodeURIComponent(searchResult);
     const page = pagination;
     const generateUrl = page
       ? apiUrl + '&page=' + page + '&per_page=30'
@@ -85,11 +96,31 @@ export default class Home extends Vue {
     Vue.axios
       .get(generateUrl)
       .then(response =>
-        this.handleResponse(response.data.items, response.data.total_count)
+        this.handleResponse(
+          response,
+          response.data.items,
+          response.data.total_count
+        )
       );
   }
 
-  handleResponse(items: AxiosResponse, totalCount: number) {
+  handleResponse(
+    response: AxiosResponse,
+    items: AxiosResponse,
+    totalCount: number
+  ) {
+    if (response.status !== 200) {
+      this.invalidStatus = true;
+      this.isSearching = false;
+      return;
+    }
+
+    if (totalCount === 0) {
+      this.isSearching = false;
+      this.noResults = true;
+      return;
+    }
+
     this.setPaginationPages(totalCount);
     this.searchMatches = [];
 
@@ -135,6 +166,8 @@ export default class Home extends Vue {
       return;
     }
 
+    this.noResults = false;
+    this.invalidStatus = false;
     this.isSearching = true;
     this.getApi(this.inputValue);
   }
