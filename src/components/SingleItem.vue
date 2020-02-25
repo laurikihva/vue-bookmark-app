@@ -71,12 +71,16 @@ export default class SingleItem extends Vue {
   border: 1px solid #2c3e50;
   border-radius: 10px;
   padding: 10px;
-  width: 600px;
+  width: 250px;
+
+  @media (min-width: 800px) {
+    width: 600px;
+  }
 }
 .single-item__heading {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 .single-item__link {
   font-size: 20px;
@@ -86,6 +90,9 @@ export default class SingleItem extends Vue {
   &:hover {
     text-decoration: none;
   }
+}
+.single-item__link-label {
+  word-break: break-all;
 }
 .single-item__link-icon {
   margin-right: 5px;

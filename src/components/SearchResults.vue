@@ -33,6 +33,7 @@ export default class SearchResults extends Vue {
   max-width: 550px;
   flex-wrap: wrap;
   border-radius: 10px;
+  justify-content: center;
 
   &.is-visible {
     display: flex;

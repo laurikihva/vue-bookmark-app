@@ -2,7 +2,7 @@
   <div class="home" id="home">
     <Overlay v-if="this.isSearching" />
     <img alt="Search logo" src="../assets/logo.png" class="home__logo" />
-    <h1>Welcome to bookmarking app!</h1>
+    <h1 id="title">Welcome to bookmarking app!</h1>
     <h3>Search below for any GitHub repository..</h3>
     <form id="home-search" class="home-search" @submit.prevent="submitForm">
       <Search
@@ -113,7 +113,7 @@ export default class Home extends Vue {
 
     this.isSearching = false;
     this.hasSearchOptions = this.shouldShowResults();
-    this.$scrollTo('#nav');
+    this.$scrollTo('#title');
   }
 
   setPaginationPages(total: number): void {

@@ -81,6 +81,7 @@ export default class BookmarkButton extends Vue {
   margin: 0;
   cursor: pointer;
   color: #42b983;
+  margin-left: 5px;
 
   &:hover,
   &.is-active {

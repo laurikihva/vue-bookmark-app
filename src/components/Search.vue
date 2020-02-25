@@ -57,5 +57,10 @@ export default class Search extends Vue {
   height: 20px;
   font-size: 18px;
   border-radius: 3px;
+  width: 180px;
+
+  @media (min-width: 600px) {
+    width: auto;
+  }
 }
 </style>

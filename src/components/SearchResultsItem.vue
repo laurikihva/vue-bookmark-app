@@ -1,14 +1,12 @@
 <template>
   <li :class="BEM">
     <div class="search-results__item-top">
-      <span>
-        <router-link
-          :to="{ name: 'Repo', params: { name: item.fullName, item } }"
-          class="search-results__link"
-        >
-          {{ item.name }}
-        </router-link>
-      </span>
+      <router-link
+        :to="{ name: 'Repo', params: { name: item.fullName, item } }"
+        class="search-results__link"
+      >
+        {{ item.name }}
+      </router-link>
       <BookmarkButton
         text="Bookmark"
         class="search-results__btn"
@@ -97,12 +95,12 @@ export default class SearchResultsItem extends Vue {
   border: 1px solid #42b983;
   margin: 10px;
   padding: 10px;
-  min-width: 230px;
   border-radius: 10px;
-
-  &.is-bookmarked {
-    background-color: #42b983;
-  }
+  width: 230px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .search-results__item-top {
   display: flex;
@@ -118,6 +116,8 @@ export default class SearchResultsItem extends Vue {
   font-size: 20px;
   font-weight: bold;
   color: #2c3e50;
+  word-break: break-all;
+  text-align: left;
 
   &:hover {
     text-decoration: none;
