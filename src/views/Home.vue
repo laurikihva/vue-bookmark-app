@@ -122,7 +122,7 @@ export default class Home extends Vue {
       this.paginationPages = 0;
     } else {
       // Setting limit 34 since only first 1000 search results are available.
-      this.paginationPages = result >= 1000 ? 34 : Math.ceil(result);
+      this.paginationPages = result >= 34 ? 34 : Math.ceil(result);
     }
   }
 
