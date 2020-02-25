@@ -78,7 +78,9 @@ export default class Home extends Vue {
     const apiUrl =
       'https://api.github.com/search/repositories?q=' + searchResult;
     const page = pagination;
-    const generateUrl = page ? apiUrl + '&page=' + page : apiUrl;
+    const generateUrl = page
+      ? apiUrl + '&page=' + page + '&per_page=30'
+      : apiUrl;
     console.log(generateUrl);
 
     Vue.axios
@@ -120,7 +122,8 @@ export default class Home extends Vue {
     if (result < 1) {
       this.paginationPages = 0;
     } else {
-      this.paginationPages = Math.ceil(result);
+      // Setting limit 34 since only first 1000 search results are available.
+      this.paginationPages = result >= 1000 ? 34 : Math.ceil(result);
     }
   }
 
