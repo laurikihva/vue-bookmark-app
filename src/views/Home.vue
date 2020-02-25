@@ -109,6 +109,8 @@ export default class Home extends Vue {
     items: AxiosResponse,
     totalCount: number
   ) {
+    this.searchMatches = [];
+
     if (response.status !== 200) {
       this.invalidStatus = true;
       this.isSearching = false;
@@ -122,7 +124,6 @@ export default class Home extends Vue {
     }
 
     this.setPaginationPages(totalCount);
-    this.searchMatches = [];
 
     if (Array.isArray(items)) {
       items.forEach(item => {
