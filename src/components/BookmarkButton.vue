@@ -42,7 +42,7 @@ export default class BookmarkButton extends Vue {
   @Prop() private item!: SearchResultItemInterface;
 
   @bookmarks.State
-  public removedBookmark!: SearchResultItemInterface[];
+  public lastModifiedBookmark!: SearchResultItemInterface[];
   public bookmarks!: SearchResultItemInterface[];
 
   @bookmarks.Action
@@ -53,15 +53,24 @@ export default class BookmarkButton extends Vue {
 
     if (!item.isBookmarked) {
       item.isBookmarked = true;
-      this.$toasted.show('New bookmark added!');
+      this.$toasted.show('New bookmark added!', {
+        action: {
+          text: 'Undo',
+          onClick: () => {
+            this.lastModifiedBookmark[0].isBookmarked = false;
+            this.updateBookmarks(this.lastModifiedBookmark[0]);
+            this.$toasted.clear();
+          }
+        }
+      });
     } else {
       item.isBookmarked = false;
       this.$toasted.show('Bookmark removed!', {
         action: {
           text: 'Undo',
           onClick: () => {
-            this.removedBookmark[0].isBookmarked = true;
-            this.updateBookmarks(this.removedBookmark[0]);
+            this.lastModifiedBookmark[0].isBookmarked = true;
+            this.updateBookmarks(this.lastModifiedBookmark[0]);
             this.$toasted.clear();
           }
         }

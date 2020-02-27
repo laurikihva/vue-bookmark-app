@@ -13,11 +13,18 @@
       />
       <button class="home-search__btn" type="submit">Search!</button>
     </form>
-    <NotificationMessage v-if="invalidStatus" type="error">
-      Oops! Something went wrong. Please try again!
-    </NotificationMessage>
-    <NotificationMessage v-if="noResults">
-      Couldn't find anything for {{ this.inputValue }}
+    <NotificationMessage
+      v-if="invalidStatus || noResults"
+      :type="invalidStatus ? 'error' : undefined"
+    >
+      {{
+        invalidStatus
+          ? 'Oops! Something went wrong. Please try again!'
+          : undefined
+      }}
+      {{
+        noResults ? 'Couldnt find anything for ' + this.inputValue : undefined
+      }}
     </NotificationMessage>
     <SearchResults v-if="hasSearchOptions">
       <SearchResultsItem

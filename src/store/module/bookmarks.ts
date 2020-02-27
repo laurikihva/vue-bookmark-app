@@ -16,7 +16,7 @@ export interface BookmarkInterface {
 @Module({ namespaced: true })
 class Bookmarks extends VuexModule {
   public bookmarks: BookmarkInterface[] = [];
-  public removedBookmark: BookmarkInterface[] = [];
+  public lastModifiedBookmark: BookmarkInterface[] = [];
   @Mutation
   public setBookmark(newBookmark: BookmarkInterface): void {
     const matchingItem = this.bookmarks.find(
@@ -25,10 +25,12 @@ class Bookmarks extends VuexModule {
 
     if (matchingItem) {
       this.bookmarks.splice(this.bookmarks.indexOf(matchingItem), 1);
-      this.removedBookmark = [];
-      this.removedBookmark.push(matchingItem);
+      this.lastModifiedBookmark = [];
+      this.lastModifiedBookmark.push(matchingItem);
     } else {
       this.bookmarks.push(newBookmark);
+      this.lastModifiedBookmark = [];
+      this.lastModifiedBookmark.push(newBookmark);
     }
   }
   @Action
